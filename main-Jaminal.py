@@ -31,14 +31,34 @@ class groupcommand:
         if self.counter == 1:
                 self.temporarylist.append(x)
                 self.labeldictionary[self.labelindicator] = self.temporarylist.copy()
-           
+
+ #duplicate label checker
+ # reject empty program
+ #comment are rejected
 class firstsyntaxchecker:
         def __init__(self):
-             self.file =  open("source.txt","r")
-        def firstcheck(self):
+             self.file =  open("test.txt","r")
+             self.counterforempty = 0
+             
+        def rejectemptyprogramchecker(self):
+                for x in self.file:
+                        if x.isspace():
+                                continue
+                        else:
+                                self.counterforempty +=1;       
+                if self.emptycounter == 0:
+                        print("the program is empty")
+                        exit()
+                
+                self.duplicatelabelchecker()
+                   
+                     
+        def duplicatelabelchecker(self):
                 temporarylist = []
-                for  x ,y in enumerate(self.file, start =1) :
+                self.file1 =  open("test.txt","r")
+                for  x ,y in enumerate(self.file1, start =1) :
                         i = y.strip().split()
+                        print(i)
                         if len(i) == 1:
                                 labelstring = str(i[0])
                                 if labelstring.endswith(":"):
@@ -46,6 +66,17 @@ class firstsyntaxchecker:
                                         if temporarylist.count(labelstring) >= 2:
                                                 print(f"the label {labelstring} is duplicate label in the line {x}")   
                                                 exit()   
+               
+        
+        
+
+                 
+        
+        
+# unknown commands
+# wrong symbol
+# undefined jump target
+
                                                 
 class secondsyntaxchecker:
     def __init__(self,labeldictionary,symbollist):
@@ -105,8 +136,12 @@ class turingmachine:
         self.i = 1
         self.list = []
         self.arrow = "↓"
+        self.programcounter = 0
+        
+        
+        
+        
     def filereading(self):
-            
         for  itemIter in self.file:  
                 self.counter +=1
                 self.dictionary[self.counter] = itemIter.strip().split()
@@ -125,7 +160,12 @@ class turingmachine:
             y = self.dictionary[self.i]
             
             input("press enter to proceed: ")
+            print(self.dictionary)
             
+            if self.programcounter == 10000:
+                print("Limit Reach for 10,000 ")
+                exit()
+                
             if len(y) <= 0:
                 self.i +=1  
                 self.list = [" "] * len(self.inputlist)
@@ -141,6 +181,7 @@ class turingmachine:
                     print(self.inputlist)  
                     
             elif   str(y[0]).lower()== "left":
+                    self.programcounter +=1
                     self.pointer -=1  
                     if  self.pointer < 0:
                             self.pointer = 0       
@@ -151,6 +192,7 @@ class turingmachine:
                     print(self.inputlist)      
                     
             elif str(y[0]).lower() == "right" :
+                    self.programcounter +=1
                     self.pointer +=1
                     if self.pointer >= len(self.inputlist):
                             self.inputlist.append(" ")
@@ -161,10 +203,12 @@ class turingmachine:
                     print(self.inputlist)        
                     
             elif  str(y[0]).lower()== "halt" :
-                    print("program ending")
+                    
+                    print("program Halting")
                     exit()                  
                             
             elif str(y[0]).lower() == "write"   and y[1] in self.symbol:
+                    self.programcounter +=1
                     self.inputlist[self.pointer] = y[1]
                     self.i +=1
                     self.list = [" "] * len(self.inputlist)
@@ -173,6 +217,7 @@ class turingmachine:
                     print(self.inputlist)       
                     
             elif   str(y[0]).lower() == "goto" and y[1] in self.symbol:
+                    self.programcounter +=1
                     o = str(y[1])
                     p = o + ":"
                     l = self.labeldictionary[p]
@@ -199,11 +244,19 @@ class turingmachine:
                         self.list[self.pointer] = self.arrow
                         print(self.list)
                         print(self.inputlist)       
-       
+        
+        print("not successful halting")
+        exit()
+        
 if __name__ == "__main__":
+      
         firstcheck = firstsyntaxchecker()
-        firstcheck.firstcheck()
+        firstcheck.rejectemptyprogramchecker()
+        
+      
        
+        
+'''   
         groupobject = groupcommand()
         groupobject.groupmethod()
       
@@ -214,6 +267,7 @@ if __name__ == "__main__":
         userinput = str(input('what the initial tape:'))
         newinput = userinput.split()
         inputlist = []  
+        
         for l in newinput:
                 if  l.isspace() :
                         continue 
@@ -221,4 +275,4 @@ if __name__ == "__main__":
                 
         turingmachineobject = turingmachine(inputlist,groupobject.labeldictionary,groupobject.symbol)
         turingmachineobject.filereading()
-        
+'''
