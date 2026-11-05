@@ -2,7 +2,7 @@ class groupcommand:
     def __init__(self):
         self.symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","a", 
           "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", 
-          "2", "3", "4", "5", "6", "7", "8", "9","", " " ,"_"]    
+          "2", "3", "4", "5", "6", "7", "8", "9","",' ' ,"_"]    
         self.labelindicator = ""
         self.temporarylist = []
         self.counter = 0
@@ -37,7 +37,8 @@ class groupcommand:
  #comment are rejected
 class firstsyntaxchecker:
         def __init__(self):
-             self.file =  open("test.txt","r")
+             self.file =  open("source.txt","r")
+             self.file1 =  open("source.txt","r") 
              self.counterforempty = 0
              
         def rejectemptyprogramchecker(self):
@@ -45,8 +46,9 @@ class firstsyntaxchecker:
                         if x.isspace():
                                 continue
                         else:
-                                self.counterforempty +=1;       
-                if self.emptycounter == 0:
+                                self.counterforempty +=1; 
+                                      
+                if self.counterforempty ==0:
                         print("the program is empty")
                         exit()
                 
@@ -55,10 +57,9 @@ class firstsyntaxchecker:
                      
         def duplicatelabelchecker(self):
                 temporarylist = []
-                self.file1 =  open("test.txt","r")
+                
                 for  x ,y in enumerate(self.file1, start =1) :
-                        i = y.strip().split()
-                        print(i)
+                        i = y.strip().split() 
                         if len(i) == 1:
                                 labelstring = str(i[0])
                                 if labelstring.endswith(":"):
@@ -138,9 +139,6 @@ class turingmachine:
         self.arrow = "↓"
         self.programcounter = 0
         
-        
-        
-        
     def filereading(self):
         for  itemIter in self.file:  
                 self.counter +=1
@@ -160,7 +158,7 @@ class turingmachine:
             y = self.dictionary[self.i]
             
             input("press enter to proceed: ")
-            print(self.dictionary)
+            print(self.dictionary[self.i])
             
             if self.programcounter == 10000:
                 print("Limit Reach for 10,000 ")
@@ -195,7 +193,7 @@ class turingmachine:
                     self.programcounter +=1
                     self.pointer +=1
                     if self.pointer >= len(self.inputlist):
-                            self.inputlist.append(" ")
+                            self.inputlist.append("B")
                     self.i +=1
                     self.list = [" "] * len(self.inputlist)
                     self.list[self.pointer] = self.arrow
@@ -203,7 +201,6 @@ class turingmachine:
                     print(self.inputlist)        
                     
             elif  str(y[0]).lower()== "halt" :
-                    
                     print("program Halting")
                     exit()                  
                             
@@ -245,18 +242,13 @@ class turingmachine:
                         print(self.list)
                         print(self.inputlist)       
         
-        print("not successful halting")
-        exit()
+        
         
 if __name__ == "__main__":
       
         firstcheck = firstsyntaxchecker()
         firstcheck.rejectemptyprogramchecker()
         
-      
-       
-        
-'''   
         groupobject = groupcommand()
         groupobject.groupmethod()
       
@@ -275,4 +267,3 @@ if __name__ == "__main__":
                 
         turingmachineobject = turingmachine(inputlist,groupobject.labeldictionary,groupobject.symbol)
         turingmachineobject.filereading()
-'''
