@@ -193,7 +193,7 @@ class turingmachine:
                     self.programcounter +=1
                     self.pointer +=1
                     if self.pointer >= len(self.inputlist):
-                            self.inputlist.append("B")
+                            self.inputlist.append("_")
                     self.i +=1
                     self.list = [" "] * len(self.inputlist)
                     self.list[self.pointer] = self.arrow
