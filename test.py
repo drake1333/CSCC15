@@ -1,12 +1,11 @@
-command = ["GOTO","IF GOTO", "WRITE","LEFT","RIGHT","HALT", "Goto", "If goto", "Write", "Left", "right" ,"halt", "START","Start","IF", "If"]
-firstlist = ["halt", "left", "right"] 
-secondlist = [ "goto" ,"write"]       
+command = ["GOTO","IF GOTO", "WRITE","LEFT","RIGHT","HALT", "Goto", "If goto", "Write", "Left", "right" ,"halt","IF", "If"] 
 symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","a", 
           "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", 
           "2", "3", "4", "5", "6", "7", "8", "9","_"]    
-labelist = []
 labeldictionary={}
-
+labelwithcolon = []
+labelnocolon = []
+onelettercommand=["LEFT","RIGHT","HALT","halt", "left", "right"]
 
 class groupcommand:
     def __init__(self):
@@ -22,8 +21,8 @@ class groupcommand:
                 labelstring = str(i[0])
                 if labelstring.endswith(":"):
                     self.labelindicator = labelstring
-                    symbol.append(self.labelindicator.replace(":",""))
-                    symbol.append(self.labelindicator)
+                    labelnocolon.append(self.labelindicator.replace(":",""))
+                    labelwithcolon.append(self.labelindicator)
                     self.counter =1
                     self.temporarylist.append(x)
                     
@@ -59,10 +58,8 @@ class firstsyntaxchecker:
                 
                 self.duplicatelabelchecker()
                    
-                     
         def duplicatelabelchecker(self):
                 temporarylist = []
-                
                 for  x ,y in enumerate(self.file1, start =1) :
                         i = y.strip().split() 
                         if len(i) == 1:
@@ -77,18 +74,13 @@ class firstsyntaxchecker:
 # wrong symbol
 # undefined jump target
 class secondsyntaxchecker:
-    def __init__(self,labeldictionary,symbollist):
-        self.gotolist = []
-        self.labeldictionary = labeldictionary
+    def __init__(self):
         self.file = open("source.txt","r")
-        self.symbol = symbollist
-        self.firstlist = ["halt", "left", "right"] 
-        self.secondlist = [ "goto" ,"write"]
-        
+
     def secondcheck(self):
         for  x ,y in enumerate(self.file, start =1) :
                 i = y.strip().split()
-                
+           
                 if y.isspace():
                         continue
         
@@ -105,7 +97,7 @@ class secondsyntaxchecker:
                                 if i[1]  not in symbol :
                                         print(f" the symbol {i[1]} is invalid in the line {x}")
                                         exit()
-                                elif i[3]  not in  symbol:
+                                elif i[3]  not in  labelnocolon:
                                         print(f" the label {i[3]} is invalid in the line {x}")
                                         exit()       
                         else:
@@ -118,9 +110,6 @@ class secondsyntaxchecker:
                      print(f"the command {str(i[0])} is invalid in the line {x} ") 
                      exit()
                      
-firstlist = ["halt","left","right","HALT", "LEFT","RIGHT"] 
-secondlist = ["goto","write","GOTO","WRITE"]                       
-        
 class turingmachine:
     def __init__(self, inputlist,labeldictionary,symbol):
         self.symbol = symbol
@@ -243,8 +232,20 @@ class turingmachine:
                         print(self.list)
                         print(self.inputlist)       
         
+    def goto_oneletter(self,input):
+                match (input):
+                        case ("left" | "LEFT"):
+                                self.i -= 1
+                        case ("RIGHT"| "right"):
+                                self.i +=1
+                        case ("HALT" | "halt"):
+                                print("program is halting")
+                                exit()
         
+    def statusfortape(self):
+        print("hh")
         
+                
 if __name__ == "__main__":
       
         firstcheck = firstsyntaxchecker()
@@ -252,14 +253,17 @@ if __name__ == "__main__":
         
         groupobject = groupcommand()
         groupobject.groupmethod()
-        print(symbol)
+        
         print(labeldictionary)
+       
+        secondchecker = secondsyntaxchecker()
+        secondchecker.secondcheck()
         
         
-"""     
-        checker = secondsyntaxchecker(groupobject.labeldictionary,groupobject.symbol)
-        checker.secondcheck()
         
+        
+        
+"""   
         white = ""
         userinput = str(input('what the initial tape:'))
         newinput = userinput.split()
