@@ -84,24 +84,30 @@ class secondsyntaxchecker:
                         continue
                 
                 elif len(i) >=5:
-                        print (f"The Instruction {i} \b has 5 or more letter on the line. which is invalid in turing machine in the line {x}")
+                        print (f"The Instruction {i} has 5 or more letter on the line. which is invalid in turing machine in the line {x}")
                         exit()
                         
                 elif  str(i[0])  in ["HALT", "LEFT","RIGHT"] : 
                           continue
                   
-                elif   str(i[0]) in ["GOTO","WRITE"]:        
+                elif   str(i[0]) in ["GOTO"]:        
+                        if i[1]  not in  labelnocolon:
+                                print(f" the label {i[1]} is  invalid in the line {x}")
+                                exit()
+                   
+                elif   str(i[0]) in ["WRITE"]:                      
                         if i[1]  not in  symbol:
                                 print(f" the symbol {i[1]} is  invalid in the line {x}")
-                                exit()
+                                exit()        
                                 
                 elif   str(i[0]) in ["IF"]: 
                         if  str(i[2]) in  ["GOTO"]:
                                 if i[1]  not in symbol :
                                         print(f" the symbol {i[1]} is invalid in the line {x}")
                                         exit()
-                                elif i[3]  not in  labelnocolon:
-                                        print(f" the label {i[3]} is invalid in the line {x}")
+                                
+                                if i[3]  not in  labelnocolon:
+                                        print(f" the label  {i[3]} is invalid in the line {x}")
                                         exit()       
                         else:
                                 print(f"the command {i[2]} is  invalid in the line {x}")
@@ -128,8 +134,9 @@ class turingmachine:
     def filereading(self):
         for x, y in enumerate(self.file, start = 1 ):
                 self.dictionary[x] = y.strip().split()
-
+                
         self.finitestatecontrol()
+        
         
     def finitestatecontrol(self):  
         self.list = [" "] * len(self.inputlist)
@@ -138,30 +145,29 @@ class turingmachine:
         print(self.list)
         print(self.inputlist)      
                       
-        while self.i < len(self.dictionary):
+        while self.i <= len(self.dictionary):
                 
             y = self.dictionary[self.i]
             
             input("press enter to proceed: ")
             print(self.dictionary[self.i])
+           
             
             if self.programcounter == 10000:
-                print("Limit Reach for 10,000 ")
-                exit()
-                
+                if y[0] in ["HALT"]:
+                        print("HALT")    
+                else:    
+                        print("Limit Reach for 10,000 step ")
+                        exit()
+
             if len(y) <= 0:
                 self.i +=1  
-                self.list = [" "] * len(self.inputlist)
-                self.list[self.pointer] = self.arrow
-                print(self.list)
-                print(self.inputlist)     
-                  
+                self.statusfortape()        
+                     
             elif  str(y[0]).endswith(":"):
                     self.i +=1  
-                    self.list = [" "] * len(self.inputlist)
-                    self.list[self.pointer] = self.arrow
-                    print(self.list)
-                    print(self.inputlist)  
+                    self.statusfortape()        
+
                     
             elif    str(y[0])  in ["LEFT"] :
                     self.programcounter +=1
@@ -171,11 +177,8 @@ class turingmachine:
                             self.pointer = 0    
                                
                     self.i +=1
-                    self.list = [" "] * len(self.inputlist)
-                    self.list[self.pointer] = self.arrow
-                    print(self.list)
-                    print(self.inputlist)      
-                    
+                    self.statusfortape()        
+
             elif    str(y[0])  in ["RIGHT"] :
                     self.programcounter +=1
                     self.pointer +=1
@@ -184,53 +187,43 @@ class turingmachine:
                             self.inputlist.append("_")
                             
                     self.i +=1
-                    self.list = [" "] * len(self.inputlist)
-                    self.list[self.pointer] = self.arrow
-                    print(self.list)
-                    print(self.inputlist)        
+                    self.statusfortape()        
+    
                     
             elif  str(y[0])  in ["HALT"] :
-                    print("program Halting")
+                    self.statusfortape()        
+                    print("Program Halting")
                     exit()                  
                             
             elif str(y[0])  in ["WRITE"]   and y[1] in symbol:
                     self.programcounter +=1
                     self.inputlist[self.pointer] = y[1]
                     self.i +=1
-                    self.list = [" "] * len(self.inputlist)
-                    self.list[self.pointer] = self.arrow
-                    print(self.list)
-                    print(self.inputlist)       
+                    self.statusfortape()        
+      
                     
-            elif   str(y[0])  in ["GOTO"]  and y[1] in symbol:
+            elif   str(y[0])  in ["GOTO"]  and y[1] in labelnocolon:
                     self.programcounter +=1
                     o = str(y[1])
                     p = o + ":"
                     l = labeldictionary[p]
                     self.i = l[0] 
-                    self.list = [" "] * len(self.inputlist)
-                    self.list[self.pointer] = self.arrow
-                    print(self.list)
-                    print(self.inputlist)               
+                    self.statusfortape()                      
                     
-            elif  str(y[0])  in ["IF"]   and y[1] in symbol and  str(y[2])  in ["GOTO"]  and  y[3] in symbol:
+            elif  str(y[0])  in ["IF"]   and y[1] in symbol and  str(y[2])  in ["GOTO"]  and  y[3] in labelnocolon:
+                    self.programcounter +=1
                     if  y[1]  == self.inputlist[self.pointer]:
-                            if y[3] in symbol:
+                            if y[3] in labelnocolon:
                                     o = str(y[3])
                                     p = o + ":"
                                     l = labeldictionary[p]
                                     self.i = l[0] 
-                                    self.list = [" "] * len(self.inputlist)
-                                    self.list[self.pointer] = self.arrow
-                                    print(self.list)
-                                    print(self.inputlist)       
+                                    self.statusfortape()        
+                            
                     else:
                         self.i +=1
-                        self.list = [" "] * len(self.inputlist)
-                        self.list[self.pointer] = self.arrow
-                        print(self.list)
-                        print(self.inputlist)       
-        
+                        self.statusfortape()        
+            
     def goto_oneletter(self,input):
                 match (input):
                         case ("left" | "LEFT"):
@@ -242,6 +235,7 @@ class turingmachine:
                                 exit()
         
     def statusfortape(self):
+        print(f"program counter: {self.programcounter}")
         self.list = [" "] * len(self.inputlist)
         self.list[self.pointer] = self.arrow
         print(self.list)
@@ -255,7 +249,8 @@ if __name__ == "__main__":
         
         groupobject = groupcommand()
         groupobject.groupmethod()
-       
+        
+        
         secondchecker = secondsyntaxchecker()
         secondchecker.secondcheck()
         
@@ -271,3 +266,5 @@ if __name__ == "__main__":
                 
         turingmachineobject = turingmachine(inputlist)
         turingmachineobject.filereading()
+        
+        input("Do you want to reset program")
