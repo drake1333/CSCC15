@@ -5,27 +5,29 @@ symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
 labeldictionary={}
 labelwithcolon = []
 labelnocolon = []
-onelettercommand=["LEFT","RIGHT","HALT"]
+dictionary = {}
 
 class groupcommand:
     def __init__(self):
         self.labelindicator = ""
         self.temporarylist = []
         self.counter = 0
-        self.file = open("source.txt","r")
+        self.textfile = open("source.txt","r")
+        self.textfile1 = open("source.txt","r")
         
     def  groupmethod(self):
-        for x, y in enumerate(self.file, start = 1 ):
+        for x, y in enumerate(self.textfile, start = 1 ):
             i = y.strip().split()
-            if len(i) == 1:
+            
+            if len(i) >=2:
                 labelstring = str(i[0])
-                if labelstring.endswith(":"):
-                    self.labelindicator = labelstring
-                    labelnocolon.append(self.labelindicator.replace(":",""))
-                    labelwithcolon.append(self.labelindicator)
-                    self.counter =1
-                    self.temporarylist.append(x)
-                    
+                if labelstring.endswith(":") :
+                        self.labelindicator = labelstring
+                        labelnocolon.append(self.labelindicator.replace(":",""))
+                        labelwithcolon.append(self.labelindicator)
+                        self.counter =1
+                        self.temporarylist.append(x)
+                
             if y.isspace() and self.counter ==1:
                 self.temporarylist.append(x- 1)
                 labeldictionary[self.labelindicator] = self.temporarylist.copy()
@@ -35,6 +37,25 @@ class groupcommand:
         if self.counter == 1:
                 self.temporarylist.append(x)
                 labeldictionary[self.labelindicator] = self.temporarylist.copy()
+                
+        print(labeldictionary)        
+        print(labelwithcolon)
+        print(labelnocolon)
+        
+        self.filereading()
+    def filereading(self):
+        for x, y in enumerate(self.textfile1, start = 1 ):
+                
+                
+                dictionary[x] = y.strip().split()
+                a =  dictionary [x]
+                if len(a) >=2:
+                        if str(a[0]).endswith(":"):
+                                a.pop(0)
+                        
+                
+        print(dictionary)
+        
 
  #duplicate label checker
  # reject empty program
@@ -62,7 +83,7 @@ class firstsyntaxchecker:
                 temporarylist = []
                 for  x ,y in enumerate(self.file1, start =1) :
                         i = y.strip().split() 
-                        if len(i) == 1:
+                        if len(i) >= 2:
                                 labelstring = str(i[0])
                                 if labelstring.endswith(":"):
                                         temporarylist.append(labelstring)
@@ -120,56 +141,46 @@ class secondsyntaxchecker:
                      exit()
                      
 class turingmachine:
-    def __init__(self, inputlist):
+    def __init__(self):
         self.pointer = 0
         self.counter = 0
         self.file = open("source.txt","r")
-        self.inputlist = inputlist
-        self.dictionary = {}
         self.i = 1
         self.list = []
         self.arrow = "↓"
         self.programcounter = 0
         
-    def filereading(self):
-        for x, y in enumerate(self.file, start = 1 ):
-                self.dictionary[x] = y.strip().split()
-                
-        self.finitestatecontrol()
-        
-        
+    
     def finitestatecontrol(self):  
-        self.list = [" "] * len(self.inputlist)
+        self.list = [" "] * len(inputlist)
         self.list[self.pointer] = self.arrow    
         print("program starting")
         print(self.list)
-        print(self.inputlist)      
+        print(inputlist)      
                       
-        while self.i <= len(self.dictionary):
+        while self.i <= len(dictionary):
                 
-            y = self.dictionary[self.i]
+            y = dictionary[self.i]
             
             input("press enter to proceed: ")
-            print(self.dictionary[self.i])
+            print(dictionary[self.i])
            
-            
             if self.programcounter == 10000:
                 if y[0] in ["HALT"]:
                         print("HALT")    
                 else:    
                         print("Limit Reach for 10,000 step ")
                         exit()
-
+                        
+            if len(y) == 0:
+                    continue
+            
             if len(y) <= 0:
                 self.i +=1  
                 self.statusfortape()        
-                     
-            elif  str(y[0]).endswith(":"):
-                    self.i +=1  
-                    self.statusfortape()        
-
-                    
-            elif    str(y[0])  in ["LEFT"] :
+                
+                  
+            if   str(y[0])  in ["LEFT"] :
                     self.programcounter +=1
                     self.pointer -=1  
                     
@@ -183,21 +194,22 @@ class turingmachine:
                     self.programcounter +=1
                     self.pointer +=1
                     
-                    if self.pointer >= len(self.inputlist):
-                            self.inputlist.append("_")
+                    if self.pointer >= len(inputlist):
+                            inputlist.append("_")
                             
                     self.i +=1
                     self.statusfortape()        
     
                     
             elif  str(y[0])  in ["HALT"] :
+                    self.programcounter +=1
                     self.statusfortape()        
                     print("Program Halting")
                     exit()                  
                             
             elif str(y[0])  in ["WRITE"]   and y[1] in symbol:
                     self.programcounter +=1
-                    self.inputlist[self.pointer] = y[1]
+                    inputlist[self.pointer] = y[1]
                     self.i +=1
                     self.statusfortape()        
       
@@ -212,7 +224,7 @@ class turingmachine:
                     
             elif  str(y[0])  in ["IF"]   and y[1] in symbol and  str(y[2])  in ["GOTO"]  and  y[3] in labelnocolon:
                     self.programcounter +=1
-                    if  y[1]  == self.inputlist[self.pointer]:
+                    if  y[1]  == inputlist[self.pointer]:
                             if y[3] in labelnocolon:
                                     o = str(y[3])
                                     p = o + ":"
@@ -224,37 +236,33 @@ class turingmachine:
                         self.i +=1
                         self.statusfortape()        
             
-    def goto_oneletter(self,input):
-                match (input):
-                        case ("left" | "LEFT"):
-                                self.i -= 1
-                        case ("RIGHT"| "right"):
-                                self.i +=1
-                        case ("HALT" | "halt"):
-                                print("program is halting")
-                                exit()
-        
+
     def statusfortape(self):
         print(f"program counter: {self.programcounter}")
-        self.list = [" "] * len(self.inputlist)
+        self.list = [" "] * len(inputlist)
         self.list[self.pointer] = self.arrow
         print(self.list)
-        print(self.inputlist) 
-        
+        print(inputlist) 
+
+class test:
+        def __init__(self):
+               pass
+       
+        def press(self):
+               print(inputlist)        
                 
 if __name__ == "__main__":
       
-        firstcheck = firstsyntaxchecker()
-        firstcheck.rejectemptyprogramchecker()
+        #firstcheck = firstsyntaxchecker()
+        #firstcheck.rejectemptyprogramchecker()
         
         groupobject = groupcommand()
         groupobject.groupmethod()
+        groupobject.filereading()
         
+        #secondchecker = secondsyntaxchecker()
+        #secondchecker.secondcheck()
         
-        secondchecker = secondsyntaxchecker()
-        secondchecker.secondcheck()
-        
-        white = ""
         userinput = str(input('what the initial tape:'))
         newinput = userinput.split()
         inputlist = []  
@@ -263,8 +271,9 @@ if __name__ == "__main__":
                 if  l.isspace() :
                         continue 
                 inputlist.extend(l)
-                
-        turingmachineobject = turingmachine(inputlist)
-        turingmachineobject.filereading()
+        print(inputlist)       
+         
+
+        turingmachineobject = turingmachine()
+        turingmachineobject.finitestatecontrol()
         
-        input("Do you want to reset program")
