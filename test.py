@@ -6,7 +6,7 @@ labeldictionary={}
 labelwithcolon = []
 labelnocolon = []
 dictionary = {}
-
+input=[]
 class groupcommand:
     def __init__(self):
         self.labelindicator = ""
@@ -43,17 +43,14 @@ class groupcommand:
         print(labelnocolon)
         
         self.filereading()
+        
     def filereading(self):
         for x, y in enumerate(self.textfile1, start = 1 ):
-                
-                
                 dictionary[x] = y.strip().split()
                 a =  dictionary [x]
                 if len(a) >=2:
                         if str(a[0]).endswith(":"):
                                 a.pop(0)
-                        
-                
         print(dictionary)
         
 
@@ -83,6 +80,7 @@ class firstsyntaxchecker:
                 temporarylist = []
                 for  x ,y in enumerate(self.file1, start =1) :
                         i = y.strip().split() 
+                       
                         if len(i) >= 2:
                                 labelstring = str(i[0])
                                 if labelstring.endswith(":"):
@@ -90,6 +88,11 @@ class firstsyntaxchecker:
                                         if temporarylist.count(labelstring) >= 2:
                                                 print(f"the label {labelstring} is duplicate label in the line {x}")   
                                                 exit()   
+                        if len(i) == 1:
+                                labelstring2 = str(i[0])
+                                if labelstring2.endswith(":"):
+                                        print(f"The label {labelstring2} have no command afterward. which is an invalid format of label in the line {x} ")        
+                                        
 # unknown commands
 # wrong symbol
 # undefined jump target
@@ -98,14 +101,13 @@ class secondsyntaxchecker:
         self.file = open("source.txt","r")
 
     def secondcheck(self):
-        for  x ,y in enumerate(self.file, start =1) :
-                i = y.strip().split()
-           
+        for x, y in dictionary.items():
+        
                 if len(i)==0:
                         continue
                 
-                elif len(i) >=5:
-                        print (f"The Instruction {i} has 5 or more letter on the line. which is invalid in turing machine in the line {x}")
+                elif len(i) >=6:
+                        print (f"The Instruction {i} has 6 or more word on the line. which is invalid in turing machine in the line {x}")
                         exit()
                         
                 elif  str(i[0])  in ["HALT", "LEFT","RIGHT"] : 
@@ -133,9 +135,6 @@ class secondsyntaxchecker:
                         else:
                                 print(f"the command {i[2]} is  invalid in the line {x}")
                                 
-                elif str(i[0]).endswith(":"):
-                                continue        
-                
                 elif i[0] is not command:           
                      print(f"the command {str(i[0])} is invalid in the line {x} ") 
                      exit()
@@ -164,23 +163,22 @@ class turingmachine:
             
             input("press enter to proceed: ")
             print(dictionary[self.i])
-           
+            
+        
             if self.programcounter == 10000:
                 if y[0] in ["HALT"]:
                         print("HALT")    
                 else:    
                         print("Limit Reach for 10,000 step ")
                         exit()
-                        
-            if len(y) == 0:
-                    continue
+                
             
             if len(y) <= 0:
                 self.i +=1  
-                self.statusfortape()        
+                self.statusfortape() 
                 
                   
-            if   str(y[0])  in ["LEFT"] :
+            elif   str(y[0])  in ["LEFT"] :
                     self.programcounter +=1
                     self.pointer -=1  
                     
@@ -234,9 +232,11 @@ class turingmachine:
                             
                     else:
                         self.i +=1
-                        self.statusfortape()        
-            
-
+                        self.statusfortape()      
+                          
+        print(f" Falling past the final instruction without executing HALT is a runtime error, \n not successful halting")
+        exit()
+        
     def statusfortape(self):
         print(f"program counter: {self.programcounter}")
         self.list = [" "] * len(inputlist)
@@ -253,14 +253,17 @@ class test:
                 
 if __name__ == "__main__":
       
-        #firstcheck = firstsyntaxchecker()
-        #firstcheck.rejectemptyprogramchecker()
-        
+        firstcheck = firstsyntaxchecker()
+        firstcheck.rejectemptyprogramchecker()
+""""
         groupobject = groupcommand()
-        groupobject.groupmethod()
+        firstcheck.rejectemptyprogramchecker()
+        #secondchecker = secondsyntaxchecker()
+        
+        
         groupobject.filereading()
         
-        #secondchecker = secondsyntaxchecker()
+        
         #secondchecker.secondcheck()
         
         userinput = str(input('what the initial tape:'))
@@ -276,4 +279,4 @@ if __name__ == "__main__":
 
         turingmachineobject = turingmachine()
         turingmachineobject.finitestatecontrol()
-        
+"""        
