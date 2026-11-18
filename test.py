@@ -5,8 +5,8 @@ symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
 labeldictionary={}
 labelwithcolon = []
 labelnocolon = []
-dictionary = {}
-input=[]
+instructiondictionary = {}
+
 class groupcommand:
     def __init__(self):
         self.labelindicator = ""
@@ -38,21 +38,19 @@ class groupcommand:
                 self.temporarylist.append(x)
                 labeldictionary[self.labelindicator] = self.temporarylist.copy()
                 
-        print(labeldictionary)        
-        print(labelwithcolon)
-        print(labelnocolon)
+       
         
         self.filereading()
         
     def filereading(self):
         for x, y in enumerate(self.textfile1, start = 1 ):
-                dictionary[x] = y.strip().split()
-                a =  dictionary [x]
+                instructiondictionary[x] = y.strip().split()
+                a =  instructiondictionary [x]
                 if len(a) >=2:
                         if str(a[0]).endswith(":"):
                                 a.pop(0)
-        print(dictionary)
-        
+        print(instructiondictionary)
+        print(labelwithcolon)
 
  #duplicate label checker
  # reject empty program
@@ -74,9 +72,11 @@ class firstsyntaxchecker:
                         print("the program is empty")
                         exit()
                 
-                self.duplicatelabelchecker()
+                self.duplicatelabel_invalidformat()
                    
-        def duplicatelabelchecker(self):
+                   
+                   #duplicate label and the label have no command afterward
+        def duplicatelabel_invalidformat(self):
                 temporarylist = []
                 for  x ,y in enumerate(self.file1, start =1) :
                         i = y.strip().split() 
@@ -92,58 +92,58 @@ class firstsyntaxchecker:
                                 labelstring2 = str(i[0])
                                 if labelstring2.endswith(":"):
                                         print(f"The label {labelstring2} have no command afterward. which is an invalid format of label in the line {x} ")        
+                                        exit()
                                         
 # unknown commands
 # wrong symbol
 # undefined jump target
 class secondsyntaxchecker:
     def __init__(self):
-        self.file = open("source.txt","r")
+        pass
 
     def secondcheck(self):
-        for x, y in dictionary.items():
+        for x, y in instructiondictionary.items():
         
-                if len(i)==0:
+                if len(y)==0:
                         continue
                 
-                elif len(i) >=6:
-                        print (f"The Instruction {i} has 6 or more word on the line. which is invalid in turing machine in the line {x}")
+                elif len(y) >=6:
+                        print (f"The Instruction {y} has 6 or more word on the line. which is invalid in turing machine in the line {x}")
                         exit()
                         
-                elif  str(i[0])  in ["HALT", "LEFT","RIGHT"] : 
+                elif  str(y[0])  in ["HALT", "LEFT","RIGHT"] : 
                           continue
                   
-                elif   str(i[0]) in ["GOTO"]:        
-                        if i[1]  not in  labelnocolon:
-                                print(f" the label {i[1]} is  invalid in the line {x}")
+                elif   str(y[0]) in ["GOTO"]:        
+                        if y[1]  not in  labelnocolon:
+                                print(f" the label {y[1]} is  invalid in the line {x}")
                                 exit()
                    
-                elif   str(i[0]) in ["WRITE"]:                      
-                        if i[1]  not in  symbol:
-                                print(f" the symbol {i[1]} is  invalid in the line {x}")
+                elif   str(y[0]) in ["WRITE"]:                      
+                        if y[1]  not in  symbol:
+                                print(f" the symbol {y[1]} is  invalid in the line {x}")
                                 exit()        
                                 
-                elif   str(i[0]) in ["IF"]: 
-                        if  str(i[2]) in  ["GOTO"]:
-                                if i[1]  not in symbol :
-                                        print(f" the symbol {i[1]} is invalid in the line {x}")
+                elif   str(y[0]) in ["IF"]: 
+                        if  str(y[2]) in  ["GOTO"]:
+                                if y[1]  not in symbol :
+                                        print(f" the symbol {y[1]} is invalid in the line {x}")
                                         exit()
                                 
-                                if i[3]  not in  labelnocolon:
-                                        print(f" the label  {i[3]} is invalid in the line {x}")
+                                if y[3]  not in  labelnocolon:
+                                        print(f" the label  {y[3]} is invalid in the line {x}")
                                         exit()       
                         else:
-                                print(f"the command {i[2]} is  invalid in the line {x}")
+                                print(f"the command {y[2]} is  invalid in the line {x}")
                                 
-                elif i[0] is not command:           
-                     print(f"the command {str(i[0])} is invalid in the line {x} ") 
+                elif y[0] is not command:           
+                     print(f"the command {str(y[0])} is invalid in the line {x} ") 
                      exit()
                      
 class turingmachine:
     def __init__(self):
         self.pointer = 0
         self.counter = 0
-        self.file = open("source.txt","r")
         self.i = 1
         self.list = []
         self.arrow = "↓"
@@ -157,12 +157,12 @@ class turingmachine:
         print(self.list)
         print(inputlist)      
                       
-        while self.i <= len(dictionary):
+        while self.i <= len(instructiondictionary):
                 
-            y = dictionary[self.i]
+            y = instructiondictionary[self.i]
             
             input("press enter to proceed: ")
-            print(dictionary[self.i])
+            print(instructiondictionary[self.i])
             
         
             if self.programcounter == 10000:
@@ -234,7 +234,7 @@ class turingmachine:
                         self.i +=1
                         self.statusfortape()      
                           
-        print(f" Falling past the final instruction without executing HALT is a runtime error, \n not successful halting")
+        print(f"Falling past the final instruction without executing HALT is a runtime error, \n Not successful halting")
         exit()
         
     def statusfortape(self):
@@ -244,29 +244,26 @@ class turingmachine:
         print(self.list)
         print(inputlist) 
 
-class test:
-        def __init__(self):
-               pass
-       
-        def press(self):
-               print(inputlist)        
+   
                 
 if __name__ == "__main__":
-      
+        
+        #Class
         firstcheck = firstsyntaxchecker()
-        firstcheck.rejectemptyprogramchecker()
-""""
+        secondchecker = secondsyntaxchecker()
         groupobject = groupcommand()
+        
+        # Method
         firstcheck.rejectemptyprogramchecker()
-        #secondchecker = secondsyntaxchecker()
         
         
-        groupobject.filereading()
+        groupobject.groupmethod()
+
+        secondchecker.secondcheck()
         
-        
-        #secondchecker.secondcheck()
-        
-        userinput = str(input('what the initial tape:'))
+       
+      
+        userinput = str(input(' what the initial tape:'))
         newinput = userinput.split()
         inputlist = []  
         
@@ -279,4 +276,4 @@ if __name__ == "__main__":
 
         turingmachineobject = turingmachine()
         turingmachineobject.finitestatecontrol()
-"""        
+       
