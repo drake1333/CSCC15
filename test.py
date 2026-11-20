@@ -6,6 +6,7 @@ labeldictionary={}
 labelwithcolon = []
 labelnocolon = []
 instructiondictionary = {}
+inputlist = []
 
 class groupcommand:
     def __init__(self):
@@ -243,16 +244,51 @@ class turingmachine:
         self.list[self.pointer] = self.arrow
         print(self.list)
         print(inputlist) 
-
-   
-                
-if __name__ == "__main__":
         
-        #Class
+class inputs:
+        def __init__(self):
+               pass
+        def userinput1(self):
+                userinput = str(input(' what the initial tape:'))
+                newinput = userinput.split()
+                
+                
+                for l in newinput:
+                        if  l.isspace() :
+                                continue 
+                        inputlist.extend(l)
+                print(inputlist)       
+
+def restart():
+        global command  
+        global symbol  
+        global labeldictionary
+        global labelwithcolon 
+        global labelnocolon 
+        global instructiondictionary 
+        global inputlist
+        command = ["GOTO","IF GOTO", "WRITE","LEFT","RIGHT","HALT"] 
+        symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","a", 
+                "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", 
+                "2", "3", "4", "5", "6", "7", "8", "9","_"] 
+        labeldictionary={}
+        labelwithcolon = []
+        labelnocolon = []
+        instructiondictionary = {}
+        inputlist = [] 
+        self.labelindicator = ""
+        self.temporarylist = []
+        self.counter = 0
+        self.textfile = open("source.txt","r")
+        self.textfile1 = open("source.txt","r")
+def main():
+        
+        
+                #Class
         firstcheck = firstsyntaxchecker()
         secondchecker = secondsyntaxchecker()
         groupobject = groupcommand()
-        
+        userinputs = inputs()
         # Method
         firstcheck.rejectemptyprogramchecker()
         
@@ -260,20 +296,13 @@ if __name__ == "__main__":
         groupobject.groupmethod()
 
         secondchecker.secondcheck()
+        userinputs.userinput1()
+
+
         
-       
-      
-        userinput = str(input(' what the initial tape:'))
-        newinput = userinput.split()
-        inputlist = []  
-        
-        for l in newinput:
-                if  l.isspace() :
-                        continue 
-                inputlist.extend(l)
-        print(inputlist)       
-         
 
         turingmachineobject = turingmachine()
         turingmachineobject.finitestatecontrol()
-       
+        restart()
+if __name__ == "__main__":
+        main()
