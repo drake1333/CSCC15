@@ -1,0 +1,18 @@
+
+WRITE 1
+RIGHT 
+WRITE 0 
+RIGHT 
+WRITE 1
+LEFT
+LEFT
+LEFT
+
+scan: RIGHT 
+    IF _ GOTO append
+    GOTO scan
+
+append: WRITE 1
+    RIGHT
+    WRITE 1
+    HALT

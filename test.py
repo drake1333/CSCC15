@@ -52,6 +52,8 @@ class groupcommand:
                                 a.pop(0)
         print(instructiondictionary)
         print(labelwithcolon)
+        
+    def resetvalues(self):
 
  #duplicate label checker
  # reject empty program
@@ -260,27 +262,19 @@ class inputs:
                 print(inputlist)       
 
 def restart():
-        global command  
         global symbol  
         global labeldictionary
         global labelwithcolon 
         global labelnocolon 
         global instructiondictionary 
         global inputlist
-        command = ["GOTO","IF GOTO", "WRITE","LEFT","RIGHT","HALT"] 
-        symbol = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","a", 
-                "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z", "0", "1", 
-                "2", "3", "4", "5", "6", "7", "8", "9","_"] 
+        
         labeldictionary={}
         labelwithcolon = []
         labelnocolon = []
         instructiondictionary = {}
         inputlist = [] 
-        self.labelindicator = ""
-        self.temporarylist = []
-        self.counter = 0
-        self.textfile = open("source.txt","r")
-        self.textfile1 = open("source.txt","r")
+       
 def main():
         
         
