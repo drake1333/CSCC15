@@ -11,6 +11,8 @@ inputlist = []
 operation = ""
 status = ""
 copiedinput = []
+firstpart = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z","a", 
+          "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"]
 
 
 class groupcommand:
@@ -52,14 +54,6 @@ class groupcommand:
                         if str(a[0]).endswith(":"):
                                 a.pop(0)
                                 
-                                
-        # self.resetvalues()
-        
-    def resetvalues(self):
-        self.temporarylist=[]
-        self.counter = 0
-        self.labelindicator=""
-
  #duplicate label checker
  # reject empty program
  #comment are rejected
@@ -100,10 +94,21 @@ class errorchecker:
                                         exit()
                                         
         def validlabel(self):
-                for x in labelnocolon:
-                        for y in loop:
-                                print("i")
+            for x in labelnocolon:
+                m = x[:1]    
+                if m not in firstpart:
+                        print(f"The label {x} is an invalid symbol")
+                        exit()
+                        
+                        
+                n = x[1:]
                 
+                for y in n:
+                        print(y)
+                        if y not in symbol:
+                                print(f"The label {x} is an invalid symbol")
+                                exit()    
+                        
                                                  
         def syntaxchecker(self):
             for x, y in instructiondictionary.items():
@@ -144,10 +149,7 @@ class errorchecker:
                 elif y[0] is not command:           
                      print(f"the command {str(y[0])} is invalid in the line {x} ") 
                      exit()
-            
-        def resetvalues(self):
-                self.counterforempty =0
-                self.temporarylist =[]
+         
                 
                    
 class turingmachine:
@@ -174,11 +176,12 @@ class turingmachine:
                 
             y = instructiondictionary[self.i]
             
+            print(f"Instructions: {instructiondictionary[self.i]}")
+            
+            
             if operation  == "1":
                 input("press enter to proceed: ")
         
-        
-            print(instructiondictionary[self.i])
             
             if self.programcounter == 10000:
                 if y[0] in ["HALT"]:
@@ -188,6 +191,8 @@ class turingmachine:
                         print(f"status: {status}") 
                         print("Limit Reach for 10,000 step ")
                         self.resetvalues()
+                        
+                        
             if len(y) <= 0:
                 self.i +=1  
                 self.statusfortape() 
@@ -271,15 +276,15 @@ class turingmachine:
         
         input("Require reset operation:")
         inputlist = copiedinput
+        
         self.pointer = 0
         self.counter = 0
         self.i = 1
-        self.list = []
-        self.arrow = "↓"
-        self.programcounter = 0 
+        self.programcounter = 0
         
-                
+   
         print("Choose the two operation: \n 1.Step \n 2.Run ")
+        
         
         choice = str(input("Type the number here of your chosen operation: "))
         print("Ready")
@@ -294,7 +299,6 @@ class turingmachine:
                 self.finitestatecontrol()
 
         else:
-                
               self.resetvalues()          
 
         
@@ -306,13 +310,21 @@ class inputs:
         global copiedinput
         userinput = str(input('What the initial tape:'))
         newinput = userinput.split()
+        copiedinput = inputlist.copy()
         
+        if len(newinput) == 0:
+             inputlist.extend("_")
+             copiedinput = inputlist.copy()
+             
+             return
+    
         for l in newinput:
                 if  l.isspace() :
                         continue 
                 inputlist.extend(l)
-        print(inputlist)       
-        copiedinput = inputlist.copy()
+                copiedinput = inputlist.copy()
+            
+        
                 
    def chosenoperation(self):
         global operation
@@ -332,8 +344,8 @@ class inputs:
               self.chosenoperation()          
 
         
-def main():
-                #Class
+if __name__ == "__main__":
+            #Class
         errorcheckers= errorchecker()
         userinputs = inputs()
         groupobject = groupcommand()
@@ -342,12 +354,11 @@ def main():
         # Method
         errorcheckers.rejectemptyprogramchecker()
         errorcheckers.duplicatelabel_invalidformat()
-                   
         
         groupobject.groupmethod()
+        errorcheckers.validlabel()
+        
         groupobject.filereading()
-
-
         errorcheckers.syntaxchecker()
         
         userinputs.userinput1()
@@ -356,30 +367,5 @@ def main():
         turingmachineobject.finitestatecontrol()
         
 
-if __name__ == "__main__":
-        main()
         
         
-        
-""""                 
-def reset():
-            userinput = str (input("want to reset program? type y for yes and n for no:"))
-            if userinput == "y":
-                global labeldictionary
-                global labelwithcolon
-                global instructiondictionary
-                global labelnocolon
-                
-                labeldictionary={}
-                labelwithcolon = []
-                labelnocolon = []
-                instructiondictionary = {}
-                
-                main()
-                
-            elif userinput==   "n":      
-                exit()
-            
-            else:
-                reset()
-"""

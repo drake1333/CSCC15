@@ -1,3 +1,2 @@
-RIGHT
-RIGHT 
-WRITE 0 
+s$art: RIGHT
+GOTO s$art
