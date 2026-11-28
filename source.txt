@@ -1,2 +1,5 @@
-s$art: RIGHT
-GOTO s$art
+scan: IF _ GOTO append
+RIGHT
+GOTO scan
+append: WRITE 1
+HALT
