@@ -57,42 +57,6 @@ class groupcommand:
         # Finish the final label at the last nonblank line in the file.
         if current_label is not None:
             labeldictionary[current_label][1] = last_nonblank_line
-
-
-            
-            
-        for x, y in enumerate(self.textfile, start = 1 ):
-            i = y.strip().split()
-            
-            labelstring = str(i[0])
-            if len(i) >=2 and  labelstring.endswith(":") :
-                        self.counter = 1
-                        self.labelindicator = labelstring
-                        labelnocolon.append(self.labelindicator.replace(":",""))
-                        labelwithcolon.append(self.labelindicator)
-                        self.temporarylist.append(x)
-                        
-            if len(i) >=2 and  labelstring.endswith(":")  and  self.counter == 1:              
-                        self.temporarylist.append(x+1)
-                        labeldictionary[self.labelindicator] = self.temporarylist.copy()
-                        self.temporarylist.clear()
-                        self.counter = 2
-                        
-                        self.labelindicator = labelstring
-                        labelnocolon.append(self.labelindicator.replace(":",""))
-                        labelwithcolon.append(self.labelindicator)
-                        self.temporarylist.append(x)
-                        
-           
-                        
-            print(labeldictionary)
-            print(self.temporarylist)
-                        
-                        
-        self.temporarylist.append(x)
-        labeldictionary[self.labelindicator] = self.temporarylist.copy()
-        print(labeldictionary)
-        
             
     def filereading(self):
         for x, y in enumerate(self.textfile1, start = 1 ):
@@ -169,8 +133,6 @@ class errorchecker:
         def syntaxchecker(self):
             for x, y in instructiondictionary.items():
         
-                
-                    
                 if y[0] in ["LEFT","RIGHT","HALT"]  and len(y) ==1:
                     continue
                 
@@ -220,6 +182,7 @@ class turingmachine:
         
     def finitestatecontrol(self):  
         global status
+        global steplimit
         self.list = [" "] * len(inputlist)
         self.list[self.pointer] = self.arrow   
         
@@ -238,11 +201,22 @@ class turingmachine:
             
             if self.programcounter >= steplimit:
                 if y[0] in ["HALT"]:
-                        print("HALT")    
+                        status = "Halted"
+                        print(f"Status: {status}") 
+                        print(f"Total Steps: {self.programcounter}")
+                        
+                        self.list = [" "] * len(inputlist)
+                        self.list[self.pointer] = self.arrow
+                
+                        print(f"Head Index: {self.pointer}")
+                        
+                        print(self.list)
+                        print(inputlist) 
+                        self.resetvalues()
                 else:   
                         status = "Limit Reach"
                         print(f"Status: {status}") 
-                        print("Limit Reach for 10,000 step ")
+                        print(f"Limit Reach for {steplimit} step ")
                         self.resetvalues()
                         
             
@@ -422,8 +396,6 @@ if __name__ == "__main__":
         groupobject.filereading()
         errorcheckers.syntaxchecker()
  
-        
-        print(instructiondictionary)
         userinputs.userinput1()
         
         turingmachineobject.chosenoperation()
